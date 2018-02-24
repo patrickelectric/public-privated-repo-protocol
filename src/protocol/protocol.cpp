@@ -1,16 +1,48 @@
 #include <QDebug>
+#include <QtMath>
 
 #include "protocol.h"
-
+#define SIM
 Protocol::Protocol()
     : _packer(new Packer())
 {
+#ifdef SIM
+    connect(&_timer, &QTimer::timeout, this, &Protocol::randomUpdate);
+    _timer.start(50); // 20Hz
+#else
     connect(_packer, &Packer::newPackage, this, &Protocol::emitMessages);
     connect(_packer, &Packer::newRawPackage, this, &Protocol::emitRawMessages);
+#endif
+    _points.reserve(200);
 }
 
 Protocol::~Protocol()
 {
+
+}
+
+void Protocol::randomUpdate(void)
+{
+    _points.clear();
+    static uint counter = 0;
+    counter++;
+    const float numPoints = 200;
+    const float stop1 = numPoints / 2.0 - 10 * qSin(counter / 10.0);
+    const float stop2 = 3 * numPoints / 5.0 + 6 * qCos(counter / 5.5);
+    for (int i(0); i < numPoints; i++) {
+        float point;
+        if (i < stop1) {
+            point = 0.1 * (qrand()%256)/255;
+        } else if (i < stop2) {
+            point = (-4.0 / qPow((stop2-stop1), 2.0)) * qPow((i - stop1 - ((stop2-stop1) / 2.0)), 2.0)  + 1.0;
+        } else {
+            point = 0.45 * (qrand()%256)/255;
+        }
+
+        _points.append(point);
+    }
+
+    emit echosounderPoints(_points);
 }
 
 void Protocol::emitMessages(const QVariantList& package)
@@ -229,7 +261,7 @@ void Protocol::setEchosounderAuto(bool mode)
 }
 
 // Mechanical Scanning Sonar requests
-void Protocol::requestMSSAngleProfilea()
+void Protocol::requestMSSAngleProfilea() // spelling?
 {
     request(Message::MechanicalScanningSonarMessageID::mss_angle_profile);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 
 #include "message.h"
 #include "packer.h"
@@ -12,8 +13,11 @@ public:
     Protocol();
     ~Protocol();
 
+    QTimer _timer; // Simulation update
     Message _message;
     Packer* _packer;
+    QList <double> _points;
+
 
     void request(int messageID);
     void handleData(const QByteArray& data);
@@ -42,6 +46,8 @@ public:
     Q_INVOKABLE void requestMSSRange();
     Q_INVOKABLE void requestMSSMode();
     Q_INVOKABLE void requestMSSGain();
+
+    Q_INVOKABLE void randomUpdate(void);
 
 signals:
     void update();
@@ -83,6 +89,7 @@ signals:
 
     // To Log
     void emitRawMessages(const QByteArray& package);
+
 
 private:
     void emitMessages(const QVariantList& package);
