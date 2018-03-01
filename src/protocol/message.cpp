@@ -72,8 +72,8 @@ const QByteArray Message::packString(const QVariant& messageIDEnum)
         // Echosounder
         case EchosounderMessageID::es_distance_simple :
             /**
-             * 0-3 distance
-             * 4 confidence
+             * 0-3 distance u32
+             * 4 confidence u8
              */
             return "<IB";
 
@@ -92,17 +92,15 @@ const QByteArray Message::packString(const QVariant& messageIDEnum)
             return unpack("<IBH4I");
         case EchosounderMessageID::es_profile :
             /**
-             * 0-3 distance
-             * 4 confidence
-             * 5-6 pulse_usec
-             * 6 pulse_usec
-             * 7-10 ping_number
-             * 11-14 start_mm
-             * 15-18 length_mm
-             * 19-22 gain_index
-             * 23-26 gain_index
-             * 27-28 num_points
-             * 29-n data
+             * 0-3 distance      u32
+             * 4 confidence      u8
+             * 5-6 pulse_usec    u16
+             * 7-10 ping_number  u32
+             * 11-14 start_mm    u32
+             * 15-18 length_mm   u32
+             * 19-22 gain_index  u32
+             * 23-24 num_points  u16 // Note fixed at 200
+             * 25-n data         u8[200]
              */
             return unpack("<IBH4IH200B");
         case EchosounderMessageID::es_range :
@@ -232,7 +230,7 @@ const QByteArray Message::unpack(QString packString)
 {
     // Check for endian
     if(packString[0] != '<' && packString[0] != '>') {
-        qDebug() << "packString need to start with > or < to specify endian.";
+        qDebug() << "packString needs to start with > or < to specify endian.";
         return QByteArray();
     }
 
