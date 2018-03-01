@@ -10,7 +10,7 @@ public:
     Packer();
     ~Packer();
 
-    enum ValidadeData {
+    enum ValidateData {
         NewPackage = 0,
         WrongStart,
         WrongCheckSum,
@@ -23,7 +23,7 @@ public:
     QByteArray request(int messageID, int srcDevID = 0, int dstDevID = 0);
 
 private:
-    ValidadeData validadeData(QByteArray& data, QVariantList& package);
+    ValidateData validateData(QByteArray& data, QVariantList& package);
     QVariantList unpack(const QString& packString, QByteArray data);
     QVariant unconvert(QByteArray& data, const QChar& format);
     QByteArray messagePack(int messageID, const QVariant& var);

@@ -13,7 +13,7 @@ Packer::~Packer()
 {
 }
 
-Packer::ValidadeData Packer::validadeData(QByteArray& data, QVariantList& package)
+Packer::ValidateData Packer::validateData(QByteArray& data, QVariantList& package)
 {
     // Check if data have a package
     // Return false if no package available in first n bytes
@@ -22,7 +22,7 @@ Packer::ValidadeData Packer::validadeData(QByteArray& data, QVariantList& packag
     QByteArray dataTmp = data;
     if(dataTmp.isEmpty()) {
         qDebug() << "No enough data to construct" << dataTmp.length();
-        return ValidadeData::NoData;
+        return ValidateData::NoData;
     }
 
     QVariantList header = unpack(Message::headerPackString(), dataTmp);
@@ -30,7 +30,7 @@ Packer::ValidadeData Packer::validadeData(QByteArray& data, QVariantList& packag
     // Check start byte 1 and 2
     if(header[0].toChar() != 'B' && header[1].toChar() != 'R') {
         qDebug() << "Wrong start";
-        return ValidadeData::WrongStart;
+        return ValidateData::WrongStart;
     }
 
     uint payloadSize = header[2].toUInt();
@@ -41,7 +41,7 @@ Packer::ValidadeData Packer::validadeData(QByteArray& data, QVariantList& packag
     // Check if data have enough information
     uint checksumSize = 2;
     if(payloadSize + headerSize + payloadSize > (uint)dataTmp.length()) {
-        return ValidadeData::NeedMoreData;
+        return ValidateData::NeedMoreData;
     }
 
     for(const auto& value : dataTmp.left(headerSize + payloadSize))
@@ -50,7 +50,7 @@ Packer::ValidadeData Packer::validadeData(QByteArray& data, QVariantList& packag
     QVariantList dataChecksum = unpack("<H", dataTmp.mid(headerSize + payloadSize, checksumSize));
     if(checksum != dataChecksum[0].toUInt()) {
         qDebug() << "Wrong checksum" << dataTmp.length() << headerSize + payloadSize << dataTmp.mid(headerSize + payloadSize, checksumSize);
-        return ValidadeData::WrongCheckSum;
+        return ValidateData::WrongCheckSum;
     }
 
     // Clean package before start
@@ -60,7 +60,7 @@ Packer::ValidadeData Packer::validadeData(QByteArray& data, QVariantList& packag
     emit newRawPackage(data.left(headerSize + payloadSize + checksumSize));
     data.remove(0, headerSize + payloadSize + checksumSize);
 
-    return ValidadeData::NewPackage;
+    return ValidateData::NewPackage;
 }
 
 void Packer::decode(const QByteArray& data)
@@ -71,18 +71,18 @@ void Packer::decode(const QByteArray& data)
     QVariantList package;
     bool exitLoop = false;
     while(!(dataReceived.isEmpty() || exitLoop)) {
-        switch(validadeData(dataReceived, package)) {
-            case ValidadeData::NewPackage:
+        switch(validateData(dataReceived, package)) {
+            case ValidateData::NewPackage:
                 emit newPackage(package);
                 break;
 
-            case ValidadeData::WrongStart:
-            case ValidadeData::WrongCheckSum:
+            case ValidateData::WrongStart:
+            case ValidateData::WrongCheckSum:
                 dataReceived = dataReceived.remove(0, 1);
                 break;
 
-            case ValidadeData::NoData:
-            case ValidadeData::NeedMoreData:
+            case ValidateData::NoData:
+            case ValidateData::NeedMoreData:
             default:
                 exitLoop = true;
                 break;
