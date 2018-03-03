@@ -2,6 +2,7 @@
 
 #include <QObject>
 
+/// Message describes the types/contents/format of messages
 class Message : public QObject
 {
     Q_OBJECT
@@ -11,6 +12,46 @@ class Message : public QObject
 public:
     Message();
     ~Message();
+
+//    struct message {
+//        uint8_t header[2];
+//        QVariantList data;
+//        const char* packString;
+//        uint8_t checksum;
+//    };
+
+//    struct msg_gen_goto_bootloader {
+//        uint8_t header[2];
+//        QVariantList data;
+//        static const char* packString;
+//        uint8_t checksum;
+//    };
+
+//    struct msg_es_distance_simple {
+//        uint8_t header[2];
+//        QVariantList data;
+//        static const char* packString;
+//        uint8_t checksum;
+
+////        uint32_t& distance = data[1];
+////        uint8_t& confidence = data[2];
+//    };
+
+//    struct msg_es_distance {
+//        uint8_t header[2];
+//        QVariantList& data;
+//        static const char* packString;
+//        uint8_t checksum;
+
+//        uint32_t& distance;
+//        uint8_t& confidence;
+//        uint16_t& pulse_usec;
+//        uint32_t& ping_number;
+//        uint32_t& start_mm;
+//        uint32_t& length_mm;
+//        uint32_t& gain_index;
+//    };
+
 
     enum GeneralMessageID {
          gen_goto_bootloader = 100

@@ -4,6 +4,7 @@
 
 #include "message.h"
 #include "packer.h"
+#include "packer_json.h"
 
 class Protocol : public QObject
 {
@@ -14,6 +15,7 @@ public:
 
     Message _message;
     Packer* _packer;
+//    PackerJson* _packer;
 
     void request(int messageID);
     void handleData(const QByteArray& data);

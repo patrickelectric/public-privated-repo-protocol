@@ -10,7 +10,7 @@ Ping::Ping() :
 {
     emit linkUpdate();
 
-    connectLink("2:/dev/ttyUSB0:115200");
+    connectLink("2:/dev/ttyUSB1:115200");
 }
 
 void Ping::connectLink(const QString& connString)

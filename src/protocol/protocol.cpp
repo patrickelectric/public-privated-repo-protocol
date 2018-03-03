@@ -3,16 +3,18 @@
 #include "protocol.h"
 
 Protocol::Protocol()
+//    : _packer(new PackerJson())
     : _packer(new Packer())
 {
-    connect(_packer, &Packer::newPackage, this, &Protocol::emitMessages);
-    connect(_packer, &Packer::newRawPackage, this, &Protocol::emitRawMessages);
+//    connect(_packer, &Packer::newPackage, this, &Protocol::emitMessages);
+//    connect(_packer, &Packer::newRawPackage, this, &Protocol::emitRawMessages);
 }
 
 Protocol::~Protocol()
 {
 }
 
+// This function has got to be changed to not use indices, this logic should be done by ping and data assigned to ping members
 void Protocol::emitMessages(const QVariantList& package)
 {
     switch(package[3].toInt()) {
@@ -46,7 +48,7 @@ void Protocol::emitMessages(const QVariantList& package)
             break;
 
         case Message::EchosounderMessageID::es_distance:
-            emit echosounderDistance(package[6].toInt());
+            emit echosounderDistance(package[6].toInt()); // I don't like having to index everything
             emit echosounderConfidence(package[7].toInt());
             emit echosounderPulseUs(package[8].toInt());
             emit echosounderPingNumber(package[9].toInt());
@@ -147,12 +149,13 @@ void Protocol::emitMessages(const QVariantList& package)
 void Protocol::handleData(const QByteArray& data)
 {
     _packer->decode(data);
+//    _packer->_parseBuffer(data);
 }
 
 void Protocol::request(int messageID)
 {
-    auto byteArray = _packer->request(messageID);
-    emit sendData(byteArray);
+//    auto byteArray = _packer->request(messageID);
+//    emit sendData(byteArray);
 }
 
 // General requests
@@ -216,16 +219,16 @@ void Protocol::setEchosounderGain(int gain)
 {
     QVariantList vars;
     vars.append(gain);
-    auto byteArray = _packer->createPack(Message::EchosounderMessageID::es_gain, vars);
-    emit sendData(byteArray);
+//    auto byteArray = _packer->createPack(Message::EchosounderMessageID::es_gain, vars);
+//    emit sendData(byteArray);
 }
 
 void Protocol::setEchosounderAuto(bool mode)
 {
     QVariantList vars;
     vars.append(mode);
-    auto byteArray = _packer->createPack(Message::EchosounderMessageID::es_mode, vars);
-    emit sendData(byteArray);
+//    auto byteArray = _packer->createPack(Message::EchosounderMessageID::es_mode, vars);
+//    emit sendData(byteArray);
 }
 
 // Mechanical Scanning Sonar requests

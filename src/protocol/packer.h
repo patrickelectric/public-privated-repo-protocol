@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QVariantList>
 
+/// Packer packs/unpacks messages into/from raw buffers
+///
 class Packer : public QObject
 {
     Q_OBJECT
