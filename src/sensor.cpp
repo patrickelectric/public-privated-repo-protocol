@@ -10,7 +10,7 @@ Sensor::Sensor() :
 {
     emit linkUpdate();
 
-        connectLink("2:/dev/ttyUSB2:460800");
+//        connectLink("2:/dev/ttyUSB2:460800");
 //        connectLink("3:0.0.0.0:8888");
 }
 

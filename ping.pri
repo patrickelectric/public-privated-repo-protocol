@@ -6,10 +6,12 @@ INCLUDEPATH += $$SRC_PATH
 
 HEADERS += \
     $$SRC_PATH/ping.h \
-    $$PWD/src/sensor.h
+    $$PWD/src/sensor.h \
+    $$PWD/src/sensorarbitrary.h
 SOURCES += \
     $$SRC_PATH/ping.cpp \
-    $$PWD/src/sensor.cpp
+    $$PWD/src/sensor.cpp \
+    $$PWD/src/sensorarbitrary.cpp
 
 include($$SRC_PATH/link/link.pri)
 include($$SRC_PATH/protocol/protocol.pri)

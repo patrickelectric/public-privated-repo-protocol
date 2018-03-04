@@ -18,19 +18,24 @@ public:
     Q_PROPERTY(AbstractLink* linkLog READ linkLog NOTIFY linkLogUpdate)
     AbstractLink* linkLog() { return _linkOut ? _linkOut->self() : nullptr; };
 
+    Q_PROPERTY(QString name READ name NOTIFY nameUpdate)
+    QString name() { return _name; };
+
     Q_INVOKABLE void connectLink(const QString& connString);
     Q_INVOKABLE void connectLinkLog(const QString& connString);
 
-private:
+protected:
     Link* _linkIn;
     Link* _linkOut;
     Protocol* _protocol;
+    QString _name;
 
 signals:
     // In
     void connectionClose();
     void connectionOpen();
     void protocolUpdate();
+    void nameUpdate();
     void linkUpdate();
 
     // Out
