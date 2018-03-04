@@ -7,7 +7,8 @@ INCLUDEPATH += $$SRC_PATH
 HEADERS += \
     $$SRC_PATH/ping.h \
     $$PWD/src/sensor.h \
-    $$PWD/src/sensorarbitrary.h
+    $$PWD/src/sensorarbitrary.h \
+    $$PWD/src/wraith32.h
 SOURCES += \
     $$SRC_PATH/ping.cpp \
     $$PWD/src/sensor.cpp \

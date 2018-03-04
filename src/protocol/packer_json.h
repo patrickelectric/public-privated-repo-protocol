@@ -46,11 +46,7 @@ public:
                         errors++;
                     } else {
                         parsed++;
-                        QJsonObject obj= doc.object();
-                        foreach(const QString& key, obj.keys()) {
-                            QJsonValue value = obj.value(key);
-                            emit newMessage(obj);
-                        }
+                        emit newMessage(doc.object());
                     }
                 }
                 state = WaitStart;
