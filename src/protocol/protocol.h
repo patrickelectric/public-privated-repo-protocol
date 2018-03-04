@@ -14,7 +14,7 @@ public:
     ~Protocol();
 
     Message _message;
-    Packer* _packer;
+    PackerJson* _packer;
 //    PackerJson* _packer;
 
     void request(int messageID);
@@ -85,6 +85,8 @@ signals:
 
     // To Log
     void emitRawMessages(const QByteArray& package);
+
+    void emitJson(const QJsonObject& obj);
 
 private:
     void emitMessages(const QVariantList& package);

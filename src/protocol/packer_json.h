@@ -23,7 +23,7 @@ public:
     void _parssseByte(const char& byte)
     {
         static QByteArray buf;
-
+        qDebug() << "parsing" << byte;
         switch(state) {
         case WaitStart:
             if (byte == '{') {
@@ -34,30 +34,29 @@ public:
             }
             break;
         case WaitEnd:
-            for (int i = 0; i < buf.size(); i++) {
-                buf.append(byte);
-                if (byte == '}') {
-                    QJsonDocument doc = QJsonDocument::fromJson(buf);
-                    if (doc.isNull()) {
-                        // error
-                        qDebug() << "Error parsing JSON document from buffer";
+            buf.append(byte);
+            if (byte == '}') {
+                QJsonDocument doc = QJsonDocument::fromJson(buf);
+                if (doc.isNull()) {
+                    // error
+                    qDebug() << "Error parsing JSON document from buffer";
+                    errors++;
+                } else {
+                    if (!doc.isObject()) {
+                        qDebug() << "Error JSON document is not object";
                         errors++;
                     } else {
-                        if (!doc.isObject()) {
-                            qDebug() << "Error JSON document is not object";
-                            errors++;
-                        } else {
-                            parsed++;
-                            QJsonObject obj= doc.object();
-                            foreach(const QString& key, obj.keys()) {
-                                QJsonValue value = obj.value(key);
-                                qDebug() << "Key = " << key << ", Value = " << value.toString();
-                            }
+                        parsed++;
+                        QJsonObject obj= doc.object();
+                        foreach(const QString& key, obj.keys()) {
+                            QJsonValue value = obj.value(key);
+                            qDebug() << "Key = " << key << ", Value = " << value;
+                            emit newMessage(obj);
                         }
                     }
-                    state = WaitStart;
-                    buf.clear();
                 }
+                state = WaitStart;
+                buf.clear();
             }
             break;
         }
@@ -80,7 +79,7 @@ public:
 
 
 signals:
-    void newMessage();
+    void newMessage(const QJsonObject& obj);
 };
 
 

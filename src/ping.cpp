@@ -10,7 +10,8 @@ Ping::Ping() :
 {
     emit linkUpdate();
 
-    connectLink("2:/dev/ttyUSB1:115200");
+        connectLink("2:/dev/ttyUSB2:460800");
+//        connectLink("3:0.0.0.0:8888");
 }
 
 void Ping::connectLink(const QString& connString)
@@ -22,6 +23,7 @@ void Ping::connectLink(const QString& connString)
         disconnect(_protocol, &Protocol::update, this, &Ping::protocolUpdate);
     }
 
+    qDebug() << "connecting to" << connString;
     QStringList confList = connString.split(':');
     if(confList.length() != 3) {
         qDebug() << "wrong size !";

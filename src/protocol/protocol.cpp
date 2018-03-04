@@ -3,11 +3,21 @@
 #include "protocol.h"
 
 Protocol::Protocol()
-//    : _packer(new PackerJson())
-    : _packer(new Packer())
+    : _packer(new PackerJson())
+//    : _packer(new Packer())
 {
 //    connect(_packer, &Packer::newPackage, this, &Protocol::emitMessages);
-//    connect(_packer, &Packer::newRawPackage, this, &Protocol::emitRawMessages);
+    //    connect(_packer, &Packer::newRawPackage, this, &Protocol::emitRawMessages);
+    connect(_packer, SIGNAL(newMessage(const QJsonObject&)), this, SIGNAL(emitJson(const QJsonObject&)));
+//    connect(_packer, &PackerJson::newMessage,[=]{ this->emitJson; });
+    connect(this, &Protocol::emitJson, [=] (const QJsonObject& obj){ qDebug() << "signaled";
+        foreach(const QString& key, obj.keys()) {
+            QJsonValue value = obj.value(key);
+            qDebug() << "Key = " << key << ", Value = " << value;
+            emit echosounderDistance(value.toInt()*100);
+        }
+    });
+
 }
 
 Protocol::~Protocol()
@@ -148,8 +158,8 @@ void Protocol::emitMessages(const QVariantList& package)
 
 void Protocol::handleData(const QByteArray& data)
 {
-    _packer->decode(data);
-//    _packer->_parseBuffer(data);
+//    _packer->decode(data);
+    _packer->_parssseBuffer(data);
 }
 
 void Protocol::request(int messageID)
