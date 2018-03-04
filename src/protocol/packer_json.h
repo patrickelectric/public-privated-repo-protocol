@@ -20,10 +20,9 @@ public:
 //    void decode(const QByteArray &data) override { _parseBuffer(data); };
 
 
-    void _parssseByte(const char& byte)
+    void parseByte(const char& byte)
     {
         static QByteArray buf;
-        qDebug() << "parsing" << byte;
         switch(state) {
         case WaitStart:
             if (byte == '{') {
@@ -50,7 +49,6 @@ public:
                         QJsonObject obj= doc.object();
                         foreach(const QString& key, obj.keys()) {
                             QJsonValue value = obj.value(key);
-                            qDebug() << "Key = " << key << ", Value = " << value;
                             emit newMessage(obj);
                         }
                     }
@@ -62,9 +60,9 @@ public:
         }
     }
 
-    void _parssseBuffer(const QByteArray& buf) {
+    void parseBuffer(const QByteArray& buf) {
         for (int i = 0; i < buf.size(); i++) {
-            _parssseByte(buf.at(i));
+            parseByte(buf.at(i));
         }
     }
     uint32_t parsed;

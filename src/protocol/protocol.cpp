@@ -10,10 +10,9 @@ Protocol::Protocol()
     //    connect(_packer, &Packer::newRawPackage, this, &Protocol::emitRawMessages);
     connect(_packer, SIGNAL(newMessage(const QJsonObject&)), this, SIGNAL(emitJson(const QJsonObject&)));
 //    connect(_packer, &PackerJson::newMessage,[=]{ this->emitJson; });
-    connect(this, &Protocol::emitJson, [=] (const QJsonObject& obj){ qDebug() << "signaled";
+    connect(this, &Protocol::emitJson, [=] (const QJsonObject& obj){
         foreach(const QString& key, obj.keys()) {
             QJsonValue value = obj.value(key);
-            qDebug() << "Key = " << key << ", Value = " << value;
             emit echosounderDistance(value.toInt()*100);
         }
     });
@@ -159,7 +158,7 @@ void Protocol::emitMessages(const QVariantList& package)
 void Protocol::handleData(const QByteArray& data)
 {
 //    _packer->decode(data);
-    _packer->_parssseBuffer(data);
+    _packer->parseBuffer(data);
 }
 
 void Protocol::request(int messageID)
