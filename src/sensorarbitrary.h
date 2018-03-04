@@ -20,8 +20,8 @@ public:
     QString name() { return _name; };
 
 signals:
-    void valueUpdate();
-    void nameUpdate();
+    void valueUpdate(QVariant value);
+    void nameUpdate(QString name);
 
 private:
 
@@ -29,7 +29,10 @@ private:
     QVariant _value;
 
     void update(const QJsonObject& obj) {
-        qDebug() << "fuck";
+        _name = (obj.begin().key());
+        emit nameUpdate(_name);
+         _value = (obj.begin().value().toVariant());
+         emit valueUpdate(_value);
     };
 
     // TODO, maybe store history/filtered history of values in this object for access by different visual elements without need to recompute
