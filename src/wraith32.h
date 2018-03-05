@@ -28,8 +28,8 @@ public:
 
 signals:
     void inputUpdate(QVariant input);
-    void voltageUpdate();
-    void currentUpdate();
+    void voltageUpdate(QVariant voltage);
+    void currentUpdate(QVariant current);
     void rpmUpdate(QVariant rpm);
 
 private:
@@ -47,8 +47,13 @@ private:
                 emit rpmUpdate(_rpm);
             } else if (key == "Input") {
                 _input = value;
-                qDebug() << "Got input" << _input;
                 emit inputUpdate(_input);
+            } else if (key == "Voltage") {
+                _voltage = value;
+                emit voltageUpdate(_voltage);
+            } else if (key == "Current") {
+                _current = value;
+                emit inputUpdate(_current);
             }
         }
     };
