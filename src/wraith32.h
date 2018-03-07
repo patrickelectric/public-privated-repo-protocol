@@ -53,7 +53,7 @@ private:
                 emit voltageUpdate(_voltage);
             } else if (key == "Current") {
                 _current = value;
-                emit inputUpdate(_current);
+                emit currentUpdate(_current);
             }
         }
     };
