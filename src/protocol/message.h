@@ -13,6 +13,49 @@ public:
     Message();
     ~Message();
 
+//    enum MessageTypes {
+
+//        MessageTypePing,
+//        MessageTypeMavlink,
+//        MessageTypeJson
+//    };
+
+   /// class Message {
+   ///
+   /// const QByteArray data
+   ///
+   ///
+   /// Message<MessageType> fromBuffer(QByteArray); // This does the logic to unpack a message, STATIC
+    // QByteArray toBuffer(Message<MessageType>); // STATIC
+   /// }
+   ///
+   /// class PingMessage {
+   /// static const header;
+   /// QByteArray data;
+   ///
+   /// const char* packString;
+   /// uint8_t checksum;
+   ///
+   /// }
+   ///
+   /// class JsonMessage {
+   /// QJsonObject obj;
+   /// }
+
+//    Message<MessageTypePing>;
+
+
+
+
+    /// for ping protocol:
+    /// 1. Wait for start 'BR'
+    /// 2. Read payload length
+    /// 3. Read id
+    /// 4. Wait for length
+    /// 5. Pass buffer to message to decode
+    /// 6. get valid message object back from message
+    ///
+    ///
 //    struct message {
 //        uint8_t header[2];
 //        QVariantList data;

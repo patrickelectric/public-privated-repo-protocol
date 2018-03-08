@@ -20,6 +20,14 @@ public:
 //    void decode(const QByteArray &data) override { _parseBuffer(data); };
 
 
+    /// for ping protocol:
+    /// 1. Wait for start 'BR'
+    /// 2. Read payload length
+    /// 3. Read id
+    /// 4. Wait for length
+    /// 5. Pass buffer to message to decode
+    /// 6. get valid message object back from message
+
     void parseByte(const char& byte)
     {
         static QByteArray buf;
@@ -61,6 +69,7 @@ public:
             parseByte(buf.at(i));
         }
     }
+
     uint32_t parsed;
     uint32_t errors;
     typedef enum {
