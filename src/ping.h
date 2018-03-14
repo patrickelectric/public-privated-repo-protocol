@@ -1,5 +1,5 @@
 #include "link.h"
-#include "protocol.h"
+#include "pingprotocol.h"
 
 class Ping : public QObject
 {

@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include "protocol.h"
+#include "pingprotocol.h"
 
 Protocol::Protocol()
     : _packer(new Packer())
