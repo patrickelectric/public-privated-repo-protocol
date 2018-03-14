@@ -3,6 +3,8 @@
 
 #include "seriallink.h"
 
+namespace PNS
+{
 SerialLink::SerialLink()
 {
     setType(AbstractLink::LinkType::Serial);
@@ -58,4 +60,5 @@ QStringList SerialLink::listAvailableConnections()
 
 SerialLink::~SerialLink()
 {
+}
 }

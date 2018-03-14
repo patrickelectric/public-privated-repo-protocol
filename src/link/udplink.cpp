@@ -3,6 +3,8 @@
 
 #include "udplink.h"
 
+namespace PNS
+{
 UDPLink::UDPLink()
 {
     setType(AbstractLink::LinkType::Udp);
@@ -44,4 +46,5 @@ bool UDPLink::finishConnection()
 
 UDPLink::~UDPLink()
 {
+}
 }

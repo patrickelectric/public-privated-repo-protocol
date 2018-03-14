@@ -4,6 +4,8 @@
 
 #include "abstractlink.h"
 
+namespace PNS
+{
 class UDPLink : public AbstractLink, QUdpSocket
 {
 public:
@@ -20,3 +22,4 @@ private:
     QHostAddress _hostAddress;
     uint _port;
 };
+}

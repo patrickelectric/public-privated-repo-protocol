@@ -6,6 +6,8 @@
 #include "abstractlink.h"
 #include "logthread.h"
 
+namespace PNS
+{
 class FileLink : public AbstractLink, QFile
 {
 public:
@@ -38,3 +40,4 @@ private:
 
     LogThread* _logThread;
 };
+}

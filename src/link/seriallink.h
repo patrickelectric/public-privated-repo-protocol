@@ -5,6 +5,8 @@
 
 #include "abstractlink.h"
 
+namespace PNS
+{
 class SerialLink : public AbstractLink, QSerialPort, QSerialPortInfo
 {
 
@@ -19,3 +21,4 @@ public:
     QString errorString() final { return QSerialPort::errorString(); };
     QStringList listAvailableConnections() final;
 };
+}

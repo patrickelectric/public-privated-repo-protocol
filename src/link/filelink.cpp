@@ -8,6 +8,8 @@
 
 #include "filelink.h"
 
+namespace PNS
+{
 FileLink::FileLink():
      _openModeFlag(QIODevice::ReadWrite)
     ,_time(QTime::currentTime())
@@ -96,4 +98,5 @@ bool FileLink::finishConnection()
 
 FileLink::~FileLink()
 {
+}
 }
