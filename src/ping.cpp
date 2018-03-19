@@ -34,8 +34,7 @@ void Ping::firmwareUpdate(const QUrl& fileUrl)
 
         _protocol->requestGotoBootloader();
 
-        while (serialLink->bytesToWrite())
-        {
+        while (serialLink->bytesToWrite()) {
             qDebug() << "Waiting for bytes to be written";
             serialLink->waitForBytesWritten();
         }
@@ -45,11 +44,13 @@ void Ping::firmwareUpdate(const QUrl& fileUrl)
         disconnect(_protocol, &Protocol::update, this, &Ping::protocolUpdate);
 
         link()->finishConnection();
+    } else {
+        qDebug() << "Link not available to flash device.";
     }
 
     QSerialPortInfo pInfo(serialLink->QSerialPort::portName());
     QString portLocation = pInfo.systemLocation();
-
+    qDebug() << portLocation << fileUrl.path() << pInfo.portName();
     _flasher.flash(portLocation, fileUrl.path(), false /*verify*/);
 }
 
