@@ -44,6 +44,10 @@ void Ping::firmwareUpdate(const QUrl& fileUrl)
         disconnect(_protocol, &Protocol::update, this, &Ping::protocolUpdate);
 
         link()->finishConnection();
+
+        if(_linkIn) {
+            delete _linkIn;
+        }
     } else {
         qDebug() << "Link not available to flash device.";
     }
