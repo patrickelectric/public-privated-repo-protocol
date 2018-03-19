@@ -49,7 +49,11 @@ void Ping::firmwareUpdate(const QUrl& fileUrl)
     }
 
     QSerialPortInfo pInfo(serialLink->QSerialPort::portName());
+    #ifdef Q_OS_WIN
+    QString portLocation = pInfo.portName();
+    #else
     QString portLocation = pInfo.systemLocation();
+    #endif
     qDebug() << portLocation << fileUrl.path() << pInfo.portName();
     _flasher.flash(portLocation, fileUrl.path(), false /*verify*/);
 }
