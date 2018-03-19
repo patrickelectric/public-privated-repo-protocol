@@ -54,8 +54,9 @@ void Ping::firmwareUpdate(const QUrl& fileUrl)
     #else
     QString portLocation = pInfo.systemLocation();
     #endif
-    qDebug() << portLocation << fileUrl.path() << pInfo.portName();
-    _flasher.flash(portLocation, fileUrl.path(), false /*verify*/);
+    QString file = QDir::toNativeSeparators(fileUrl.toLocalFile());
+    qDebug() << portLocation << file << pInfo.portName();
+    _flasher.flash(portLocation, file, false /*verify*/);
 }
 
 void Ping::reconnectLink(bool success) {
