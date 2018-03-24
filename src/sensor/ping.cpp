@@ -2,6 +2,12 @@
 #include "pingmessage/pingmessage.h"
 #include "pingmessage/pingmessage_es.h"
 #include "pingmessage/pingmessage_gen.h"
+#include "../link/seriallink.h"
+#include <QProcess>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QUrl>
+#include <unistd.h>
 
 void Ping::handleMessage(PingMessage msg)
 {
@@ -93,6 +99,60 @@ void Ping::handleMessage(PingMessage msg)
     emit srcIdUpdate();
 
 //    printStatus();
+}
+
+void Ping::firmwareUpdate(QString fileUrl)
+{
+    SerialLink* serialLink = dynamic_cast<SerialLink*>(link());
+
+    if (!serialLink) {
+        return;
+    }
+
+    if(!link()->isOpen()) {
+        return;
+    }
+
+    //setPollFrequency(0); TODO
+
+    //request(gen_goto_bootloader); TODO
+    //request(0x109);
+    qDebug() << "Put it in bootloader mode.";
+    ping_msg_gen_goto_bootloader m;
+    m.updateChecksum();
+    link()->sendData(QByteArray(reinterpret_cast<const char*>(m.msgData.data()), m.msgData.size()));
+
+    //return;
+    while (serialLink->QSerialPort::bytesToWrite())
+    {
+        qDebug() << "Waiting for bytes to be written...";
+        serialLink->QSerialPort::waitForBytesWritten();
+        qDebug() << "Done !";
+    }
+
+    qDebug() << "Finish connection.";
+    usleep(1e6);
+    link()->finishConnection();
+
+
+    QSerialPortInfo pInfo(serialLink->QSerialPort::portName());
+    QString portLocation = pInfo.systemLocation();
+
+    auto flash = [=](const QString& portLocation, const QString& firmwareFile, bool verify = false /*verify*/) {
+        static QString cmd = "./stm32flash -w %0 %1";
+
+        QProcess *process = new QProcess();
+        process->setEnvironment(QProcess::systemEnvironment());
+        process->setProcessChannelMode(QProcess::MergedChannels);
+        qDebug() << "3... 2... 1...";
+        qDebug() << cmd.arg(QUrl(firmwareFile).path(), portLocation);
+        process->start(cmd.arg(QUrl(firmwareFile).path(), portLocation));
+        connect(process, &QProcess::readyReadStandardOutput, this, [process] {qDebug() << process->readAllStandardOutput();});
+        connect(process, &QProcess::readyReadStandardError, this, [process] {qDebug() << process->readAllStandardError();});
+    };
+
+    qDebug() << "Start flash.";
+    flash(portLocation, QUrl(fileUrl).path());
 }
 
 void Ping::request(int id)

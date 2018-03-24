@@ -83,6 +83,8 @@ public:
 
     Q_INVOKABLE void request(int id); // send request for message
 
+    Q_INVOKABLE void firmwareUpdate(QString fileUrl);
+
 signals:
     void srcIdUpdate();
     void dstIdUpdate();
