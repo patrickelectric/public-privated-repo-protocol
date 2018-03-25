@@ -177,7 +177,7 @@ void Ping::firmwareUpdate(QString fileUrl)
 
     qDebug() << "Start flash.";
     QThread::usleep(500e3);
-    flash(portLocation, QUrl(fileUrl).path());
+    flash(portLocation, QUrl(fileUrl).toLocalFile());
 }
 
 void Ping::request(int id)
