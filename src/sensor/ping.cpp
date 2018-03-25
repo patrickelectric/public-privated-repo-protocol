@@ -10,7 +10,6 @@
 #include <QSerialPortInfo>
 #include <QStringList>
 #include <QUrl>
-#include <unistd.h>
 
 void Ping::handleMessage(PingMessage msg)
 {
@@ -134,7 +133,6 @@ void Ping::firmwareUpdate(QString fileUrl)
     }
 
     qDebug() << "Finish connection.";
-    usleep(1e6);
     link()->finishConnection();
 
 
