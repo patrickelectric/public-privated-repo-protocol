@@ -4,8 +4,10 @@
 #include "pingmessage/pingmessage_gen.h"
 #include "../link/seriallink.h"
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QStringList>
 #include <QUrl>
 #include <unistd.h>
 
@@ -147,8 +149,28 @@ void Ping::firmwareUpdate(QString fileUrl)
         qDebug() << "3... 2... 1...";
         qDebug() << cmd.arg(QUrl(firmwareFile).path(), portLocation);
         process->start(cmd.arg(QUrl(firmwareFile).path(), portLocation));
-        connect(process, &QProcess::readyReadStandardOutput, this, [process] {qDebug() << process->readAllStandardOutput();});
-        connect(process, &QProcess::readyReadStandardError, this, [process] {qDebug() << process->readAllStandardError();});
+        emit flashProgress(0);
+        connect(process, &QProcess::readyReadStandardOutput, this, [this, process] {
+            QString output(process->readAllStandardOutput());
+            // Track values like: (12.23%)
+            QRegularExpression regex("\\d{1,3}[.]\\d\\d");
+            QRegularExpressionMatch match = regex.match(output);
+            if (match.hasMatch()) {
+                QStringList percs = match.capturedTexts();
+                for(const auto& perc : percs) {
+                    _fw_update_perc = perc.toFloat();
+
+                    if (_fw_update_perc > 99.99) {
+                        emit flashComplete();
+                    } else {
+                        emit flashProgress(_fw_update_perc);
+                    }
+                }
+            }
+
+            qDebug() << "Good" << output;
+        });
+        connect(process, &QProcess::readyReadStandardError, this, [process] {qDebug() << "Bad" << process->readAllStandardError();});
     };
 
     qDebug() << "Start flash.";
