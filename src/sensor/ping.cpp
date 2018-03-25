@@ -4,11 +4,13 @@
 #include "pingmessage/pingmessage_gen.h"
 #include "../link/seriallink.h"
 #include <QCoreApplication>
+#include <QFileInfo>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QStringList>
+#include <QThread>
 #include <QUrl>
 
 void Ping::handleMessage(PingMessage msg)
@@ -133,6 +135,7 @@ void Ping::firmwareUpdate(QString fileUrl)
     }
 
     qDebug() << "Finish connection.";
+    QThread::usleep(500e3);
     link()->finishConnection();
 
 
@@ -146,8 +149,8 @@ void Ping::firmwareUpdate(QString fileUrl)
         process->setEnvironment(QProcess::systemEnvironment());
         process->setProcessChannelMode(QProcess::MergedChannels);
         qDebug() << "3... 2... 1...";
-        qDebug() << cmd.arg(QUrl(firmwareFile).path(), portLocation);
-        process->start(cmd.arg(QUrl(firmwareFile).path(), portLocation));
+        qDebug() << cmd.arg(QFileInfo(firmwareFile).absoluteFilePath(), portLocation);
+        process->start(cmd.arg(QFileInfo(firmwareFile).absoluteFilePath(), portLocation));
         emit flashProgress(0);
         connect(process, &QProcess::readyReadStandardOutput, this, [this, process] {
             QString output(process->readAllStandardOutput());
@@ -173,6 +176,7 @@ void Ping::firmwareUpdate(QString fileUrl)
     };
 
     qDebug() << "Start flash.";
+    QThread::usleep(500e3);
     flash(portLocation, QUrl(fileUrl).path());
 }
 
