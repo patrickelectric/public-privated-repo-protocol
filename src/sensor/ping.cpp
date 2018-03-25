@@ -3,6 +3,7 @@
 #include "pingmessage/pingmessage_es.h"
 #include "pingmessage/pingmessage_gen.h"
 #include "../link/seriallink.h"
+#include <QCoreApplication>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QSerialPort>
@@ -141,7 +142,7 @@ void Ping::firmwareUpdate(QString fileUrl)
     QString portLocation = pInfo.systemLocation();
 
     auto flash = [=](const QString& portLocation, const QString& firmwareFile, bool verify = false /*verify*/) {
-        static QString cmd = "./stm32flash -w %0 %1";
+        static QString cmd = QCoreApplication::applicationDirPath() + "/stm32flash -w %0 %1";
 
         QProcess *process = new QProcess();
         process->setEnvironment(QProcess::systemEnvironment());
